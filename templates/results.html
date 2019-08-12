@@ -1,0 +1,25 @@
+{% extends "layout.html" %} {% block body %} {% if results %}
+<div class="card mb-3">
+  <div class="card-body">
+    <form method="POST">
+      {% for book in books %}
+      <div class="form-check">
+        <input type="radio" name="{{ book.id }}" id="{{ book.id }}" class="form-check-input"
+          value="{{ request.form.id }}" />
+        <label for=" {{ book.id }}" class="form-check-label">
+          <em>{{ book.title }}</em> by {{ book.author }}
+        </label>
+      </div>
+      {% endfor %}
+    </form>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-secondary my-3" role="alert">
+  No Results
+</div>
+{% endif %}
+<p class="lead">
+  Would you like to <a href="{{ url_for('search') }}">search</a> again?
+</p>
+{% endblock %}

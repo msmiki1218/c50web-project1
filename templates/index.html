@@ -1,0 +1,9 @@
+{% extends "layout.html" %} {% block body %} {% if username %}
+<div class="alert alert-info" role="alert">Logged in as {{ username }}.</div>
+<p>Please <a href="{{ url_for('logout') }}">logout</a> or use a menu link.</p>
+{% else %}
+<div class="alert alert-warning" role="alert">
+  You are not logged in.
+</div>
+<p>Please <a href="{{ url_for('login') }}">login</a> to use this website.</p>
+{% endif %} {% endblock %}
