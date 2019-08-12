@@ -99,6 +99,7 @@ def search():
     # run only if logged in
     if g.username:
         books = None
+        error = None
         if request.method == 'POST':
             isbn = request.form['isbn']
             title = request.form['title']
@@ -108,12 +109,15 @@ def search():
             elif title:
                 books = db.execute("SELECT * FROM books WHERE title iLIKE '%"+title+"%' ").fetchall()
             elif author:              
-                books = db.execute("SELECT * FROM books WHERE author iLIKE '%"+author+"%' ").fetchall()                
+                books = db.execute("SELECT * FROM books WHERE author iLIKE '%"+author+"%' ").fetchall()
+            else:
+                error = 'You must provide isbn, title, or author.' 
+                return redirect(url_for('search', error=error))              
             return render_template("results.html", title="Search Results", books=books)
         return render_template("search.html", title="Search")
 
-@app.route("/books")
-def books():
-#     isbn = book_isbn
+@app.route("/book/<string:isbn>", methods=['GET'])
+def book(isbn):
+    if g.username:
 #     book = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
-    return render_template("books.html", title="Book Information")
+        return render_template("books.html", title="Book Information")

@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
 {% block body %}
+{% if error %}
+<div class="alert alert-danger my-3" role="alert">
+  {{ error }}
+</div>
+{% endif %}
 <div class="card my-3">
   <div class="card-body">
     <form method="POST" autocomplete="on" class="card-text">

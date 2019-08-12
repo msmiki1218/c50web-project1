@@ -3,7 +3,8 @@
   <div class="card-body">
     <ul>
       {% for book in books %}
-      <li class="py-2"><a href="{{ url_for('books') }}"><em>{{ book.title }}</em></a> by {{ book.author }}</li>
+      <li class="py-2" id={{ book.isbn }}><a href="{{ url_for('books') }}"><em>{{ book.title }}</em></a> by
+        {{ book.author }}</li>
       {% endfor %}
     </ul>
   </div>
