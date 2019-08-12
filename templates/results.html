@@ -1,21 +1,15 @@
-{% extends "layout.html" %} {% block body %} {% if results %}
+{% extends "layout.html" %} {% block body %} {% if books %}
 <div class="card mb-3">
   <div class="card-body">
-    <form method="POST">
+    <ul>
       {% for book in books %}
-      <div class="form-check">
-        <input type="radio" name="{{ book.id }}" id="{{ book.id }}" class="form-check-input"
-          value="{{ request.form.id }}" />
-        <label for=" {{ book.id }}" class="form-check-label">
-          <em>{{ book.title }}</em> by {{ book.author }}
-        </label>
-      </div>
+      <li class="py-2"><a href="{{ url_for('books') }}"><em>{{ book.title }}</em></a> by {{ book.author }}</li>
       {% endfor %}
-    </form>
+    </ul>
   </div>
 </div>
 {% else %}
-<div class="alert alert-secondary my-3" role="alert">
+<div class=" alert alert-secondary my-3" role="alert">
   No Results
 </div>
 {% endif %}
