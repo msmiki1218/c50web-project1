@@ -1,9 +1,20 @@
 {% extends "layout.html" %}
 {% block body %}
-<h5>More Information</h5>
-<p>Title: {{ book.title }}</p>
-<p>Author: {{ book.author }}</p>
-<p>Publication Year: {{ book.year }}</p>
-<h5>Reviews</h5>
-<p class="small">Reviews go here</p>
+<div class="card my-3 p-3">
+  <h5 class="card-title">More Information</h5>
+  <div class="card-text">
+    <p><strong>Title:</strong> <em>{{ book.title }}</em></p>
+    <p><strong>Author:</strong> {{ book.author }}</p>
+    <p><strong>Publication Year:</strong> {{ book.year }}</p>
+    <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+  </div>
+</div>
+<div class="card p-3">
+  <h5 class="card-title">Reviews</h5>
+  <div class="card-text">
+    <p>Reviews go here</p>
+  </div>
+</div>
+
+
 {% endblock %}
