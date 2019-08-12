@@ -116,8 +116,11 @@ def search():
             return render_template("results.html", title="Search Results", books=books)
         return render_template("search.html", title="Search")
 
-@app.route("/book/<string:isbn>", methods=['GET'])
-def book(isbn):
+@app.route("/book", methods=['GET'])
+def book():
     if g.username:
-#     book = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
-        return render_template("books.html", title="Book Information")
+        if request.method == 'GET':
+            # get book id
+            id = request.args.get('book_id')
+            book = db.execute("SELECT * FROM books WHERE id = :id", {"id": id}).fetchone()
+    return render_template("book.html", book=book)
