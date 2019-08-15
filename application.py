@@ -116,7 +116,7 @@ def search():
             return render_template("results.html", title="Search Results", books=books)
         return render_template("search.html", title="Search")
 
-@app.route("/book", methods=['GET'])
+@app.route("/book", methods=['GET','POST'])
 def book():
     if g.username:
         if request.method == 'GET':
