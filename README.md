@@ -16,3 +16,5 @@ The folder 'books_import' includes the 'books.csv' file and 'import.py' - a pyth
 
 My 'search.html' page went through some changes but I settled on using a form with four text boxes. When the form is completed a 'results' page is returned with results if there are any, else it returns an alert "No Results".  It was tough figuring our how to enter my variable in the SQL Query statement.
 
+When a book title is clicked on the 'results' page, it takes you to the 'book' page where it gives more detail about the book, shows previous reviews on this book, and provides a form for the current user to add a review.
+
