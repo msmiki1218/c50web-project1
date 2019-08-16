@@ -116,6 +116,13 @@ def search():
             return render_template("results.html", title="Search Results", books=books)
         return render_template("search.html", title="Search")
 
+def check_bk_user(user_id, book_id):
+    check_user = db.execute("SELECT user_id FROM reviews WHERE book_id = :book_id", {"book_id": book_id})
+    if check_user:
+        return False
+    else:
+        return True
+
 @app.route("/book", methods=['GET','POST'])
 def book():
     if g.username:
@@ -123,4 +130,12 @@ def book():
             # get book id
             id = request.args.get('book_id')
             book = db.execute("SELECT * FROM books WHERE id = :id", {"id": id}).fetchone()
+        elif request.method == 'POST':
+            username = session['username']
+            user_id = db.execute("SELECT id FROM users WHERE username = :username", {"username": username}).fetchone()
+            return redirect('response', message='user id is {user_id}')
     return render_template("book.html", book=book)
+
+@app.route("/response", methods=['GET'])
+def response():
+    return "{message}"
