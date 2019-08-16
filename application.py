@@ -128,14 +128,20 @@ def book():
     if g.username:
         if request.method == 'GET':
             # get book id
+            review_list = []
             id = request.args.get('book_id')
             book = db.execute("SELECT * FROM books WHERE id = :id", {"id": id}).fetchone()
+            reviews = db.execute("SELECT * FROM reviews WHERE book_id = :book_id",{"book_id": id}).fetchall()
+            if reviews:
+                for review in reviews:
+                    username = db.execute("SELECT * FROM users WHERE id= :id", {"id": review.user_id}).fettchone()
+                    review_list.append([username, review.rating, review.opinion])
         elif request.method == 'POST':
             username = session['username']
             user_id = db.execute("SELECT id FROM users WHERE username = :username", {"username": username}).fetchone()
-            return redirect('response', message='user id is {user_id}')
+            return redirect(url_for('response', user_id=user_id))
     return render_template("book.html", book=book)
 
 @app.route("/response", methods=['GET'])
 def response():
-    return "{message}"
+    return render_template("tester.html")

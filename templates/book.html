@@ -10,6 +10,19 @@
   </div>
 </div>
 <div class="card p-3">
+  <h5 class="card-title">
+    Book Reviews
+  </h5>
+  <div class="card-text">
+    {% for item in review_list %}
+    <p>User: {{ item[1] }} <br>
+      Rating: {{ item[2] }} <br>
+      Comment: {{ item[3] }}</p>
+    <hr>
+    {% endfor %}
+  </div>
+</div>
+<div class="card p-3">
   <h5 class="card-title">Add a Review</h5>
   <div class="card-text">
     <h6>Rate this book</h6>
@@ -40,6 +53,7 @@
         </label>
         <textarea class="form-control" id="comment" rows="5"></textarea>
       </div>
+      <button type="submit">Add Review</button>
   </div>
   </form>
 </div>
