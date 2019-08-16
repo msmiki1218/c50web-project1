@@ -134,7 +134,7 @@ def book():
             reviews = db.execute("SELECT * FROM reviews WHERE book_id = :book_id",{"book_id": id}).fetchall()
             if reviews:
                 for review in reviews:
-                    username = db.execute("SELECT * FROM users WHERE id= :id", {"id": review.user_id}).fettchone()
+                    username = db.execute("SELECT * FROM users WHERE id = :id", {"id": review.user_id}).fetchone()
                     review_list.append([username, review.rating, review.opinion])
         elif request.method == 'POST':
             username = session['username']
