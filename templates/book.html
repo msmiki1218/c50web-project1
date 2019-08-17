@@ -20,14 +20,14 @@
   </h5>
   <div class="card-text">
     <!-- if there are reviews for this book list them -->
-    {% if reviews %}
+    {% if error %}
+    <alert class="alert-info">{{ error }}</alert>
+    {% else %}
     <ul>
       {% for review in reviews %}
       <li>Rating: {{ review.rating }}, Comment: {{ review.opinion }}</li>
       {% endfor %}
     </ul>
-    {% else %}
-    <alert class="alert-info">{{ error }}</alert>
     {% endif %}
   </div>
 </div>

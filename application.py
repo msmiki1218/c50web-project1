@@ -131,7 +131,8 @@ def book():
             book_id = request.args.get('book_id')
             book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
             # if there are no reviews for this book
-           
+            if noReviews(book_id):
+                error = "No Reviews"          
         
     return render_template("book.html", book=book, error=error)
 
