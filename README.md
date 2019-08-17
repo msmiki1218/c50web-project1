@@ -1,6 +1,6 @@
 # Project 1
 
-Web Programming with Python and JavaScript
+**Web Programming with Python and JavaScript**
 
 I started by creating routes for index, login, and logout so that I can control these functions within sessions.
 
