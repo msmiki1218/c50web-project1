@@ -136,7 +136,7 @@ def getReviews(book_id):
 
 @app.route("/book", methods=['GET','POST'])
 def book():
-    # book=None
+    book=None
     error=None
     reviews=None
     if g.username:
@@ -149,8 +149,9 @@ def book():
                 error = "No Reviews"   
             # if there are reviews for this book
             else:
-                reviews = getReviews(book_id)           
-    return render_template("book.html", book=book, reviews=reviews, error=error)
+                reviews = getReviews(book_id)
+        # else:           
+    return render_template("book.html", title="Book Reviews", book=book, reviews=reviews, error=error)
 
 @app.route("/response", methods=['GET'])
 def response():
