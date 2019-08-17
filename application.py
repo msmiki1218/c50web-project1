@@ -121,8 +121,8 @@ def noReviews(book_id):
     return db.execute("SELECT * FROM reviews WHERE book_id = :book_id", {"book_id": book_id}).rowcount==0
 
 def getUsername(user_id):
-	name = db.execute("SELECT username FROM users WHERE id = :id", {"id": user_id}).fetchone()
-	return name
+	user = db.execute("SELECT * FROM users WHERE id = :id", {"id": user_id}).fetchone()
+	return user.username
 
 def getReviews(book_id):
 	review_list = []
@@ -131,7 +131,7 @@ def getReviews(book_id):
             user = getUsername(book_review.user_id)
             rating = book_review.rating
             opinion = book_review.opinion
-            review_list.append([user, rating, opinion])
+            review_list.append({"user": user, "rating": rating, "opinion": opinion})
 	return review_list
 
 @app.route("/book", methods=['GET','POST'])
@@ -149,10 +149,8 @@ def book():
                 error = "No Reviews"   
             # if there are reviews for this book
             else:
-                reviews = getReviews(book_id)
-                print(reviews)      
-        
-    return render_template("book.html", book=book, error=error)
+                reviews = getReviews(book_id)           
+    return render_template("book.html", book=book, reviews=reviews, error=error)
 
 @app.route("/response", methods=['GET'])
 def response():
