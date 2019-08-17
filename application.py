@@ -31,6 +31,7 @@ def before_request():
 def index():
     users = db.execute("SELECT * FROM users").fetchall()
     books = db.execute("SELECT * FROM books").fetchall()
+    reviews = db.execute("SELECT * FROM reviews").fetchall()
     if 'username' in session:
         username = session['username']
     else:
@@ -116,27 +117,23 @@ def search():
             return render_template("results.html", title="Search Results", books=books)
         return render_template("search.html", title="Search")
 
-def check_bk_user(user_id, book_id):
-    check_user = db.execute("SELECT user_id FROM reviews WHERE book_id = :book_id", {"book_id": book_id})
-    if check_user:
-        return False
-    else:
-        return True
+def noReviews(book_id):
+    return db.execute("SELECT * FROM reviews WHERE book_id = :book_id", {"book_id": book_id}).rowcount==0
 
 @app.route("/book", methods=['GET','POST'])
 def book():
+    # book=None
+    error=None
+    # reviews=None
     if g.username:
         if request.method == 'GET':
             # get book id
-            review_list = []
             book_id = request.args.get('book_id')
             book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
-            
-        elif request.method == 'POST':
-            username = session['username']
-            user_id = db.execute("SELECT id FROM users WHERE username = :username", {"username": username}).fetchone()
-            return redirect(url_for('response', user_id=user_id))
-    return render_template("book.html", book=book)
+            # if there are no reviews for this book
+           
+        
+    return render_template("book.html", book=book, error=error)
 
 @app.route("/response", methods=['GET'])
 def response():

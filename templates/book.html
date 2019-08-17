@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
+{% if book %}
 <div class="card my-3 p-3">
   <h5 class="card-title">More Information
     <hr>
@@ -11,6 +12,7 @@
     <p><strong>ISBN:</strong> {{ book.isbn }}</p>
   </div>
 </div>
+{% endif %}
 <div class="card p-3 mb-3">
   <h5 class="card-title">
     Book Reviews
@@ -25,7 +27,7 @@
       {% endfor %}
     </ul>
     {% else %}
-    <alert class="alert-info">No reviews for this title.</alert>
+    <alert class="alert-info">{{ error }}</alert>
     {% endif %}
   </div>
 </div>
