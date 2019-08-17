@@ -18,14 +18,14 @@ My `search.html` page went through some changes but I settled on using a form wi
 
 When a book title is clicked on the `results` page, it takes you to the `book` page where it gives more detail about the book, shows previous reviews on this book, and provides a form for the current user to add a review.
 
-## Lessons Learned
+### Lessons Learned
 - The importance of using a virtual environment
 - Git Bash worked better for me than PowerShell or Command Prompt in Windows10.
 - Break the work down into (even) smaller chunks
 - It's OKAY to WALK AWAY
 - avoid adding too many extensions to Flask; I installed and uninstalled too many
 
-## Recommendations
+### Recommendations
 1.  The information about APIs should be a the end of week 3 or the beginning of week 4.  Learning all that information about ORMs before then was not relevant to the project.
 2.  I wish there were PDF versions of the lecture notes.  There were a few misspellings and issues with quotation marks.  I suppose I could have printed out the web page but I wanted a digital copy.  I ended up creating one myself.
 
