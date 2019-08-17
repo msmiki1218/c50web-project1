@@ -129,13 +129,9 @@ def book():
         if request.method == 'GET':
             # get book id
             review_list = []
-            id = request.args.get('book_id')
-            book = db.execute("SELECT * FROM books WHERE id = :id", {"id": id}).fetchone()
-            reviews = db.execute("SELECT * FROM reviews WHERE book_id = :book_id",{"book_id": id}).fetchall()
-            if reviews:
-                for review in reviews:
-                    username = db.execute("SELECT * FROM users WHERE id = :id", {"id": review.user_id}).fetchone()
-                    review_list.append([username, review.rating, review.opinion])
+            book_id = request.args.get('book_id')
+            book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
+            
         elif request.method == 'POST':
             username = session['username']
             user_id = db.execute("SELECT id FROM users WHERE username = :username", {"username": username}).fetchone()

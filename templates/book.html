@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
 <div class="card my-3 p-3">
-  <h5 class="card-title">More Information</h5>
+  <h5 class="card-title">More Information
+    <hr>
+  </h5>
   <div class="card-text">
     <p><strong>Title:</strong> <em>{{ book.title }}</em></p>
     <p><strong>Author:</strong> {{ book.author }}</p>
@@ -9,17 +11,22 @@
     <p><strong>ISBN:</strong> {{ book.isbn }}</p>
   </div>
 </div>
-<div class="card p-3">
+<div class="card p-3 mb-3">
   <h5 class="card-title">
     Book Reviews
+    <hr>
   </h5>
   <div class="card-text">
-    {% for item in review_list %}
-    <p>User: {{ item[1] }} <br>
-      Rating: {{ item[2] }} <br>
-      Comment: {{ item[3] }}</p>
-    <hr>
-    {% endfor %}
+    <!-- if there are reviews for this book list them -->
+    {% if reviews %}
+    <ul>
+      {% for review in reviews %}
+      <li>Rating: {{ review.rating }}, Comment: {{ review.opinion }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <alert class="alert-info">No reviews for this title.</alert>
+    {% endif %}
   </div>
 </div>
 <div class="card p-3">
