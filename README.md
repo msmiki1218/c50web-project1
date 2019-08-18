@@ -14,9 +14,9 @@ To add new registrants to my `users` table in my database added `user_check_2` f
 
 The folder `books_import` includes the `books.csv` file and `import.py` - a python script that successfully imported the books data to the `books` table in my database.
 
-The `search.html` page contains a form with four text boxes; if any of the boxes contain content when form is submitted, a `results` page is returned with results if there are any, else it returns an alert `No Results`.  It was tough figuring our how to enter my variable in the SQL Query statement.
+The `search.html` page contains a form with four text boxes; if any of the boxes contain content when form is submitted, a `results` page is returned with results if there are any, else it returns an alert `No Results`. If the given ISBN is not in the books table, a 404 error is displayed.
 
-When a book title is clicked on the `results` page, it takes you to the `book` page where it gives more detail about the book, shows previous reviews on this book, and provides a form for the current user to add a review.
+When a book title is clicked on the `results` page, it takes you to the `book` page where it gives more detail about the book, shows previous reviews on this book, and provides a form for the current user to add a review.  When the form is complete, the review is added to the `reviews` table and user is returned to the `search` page.
 
 ### Lessons Learned
 - use a virtual environment!  I started without one and ended up in a mess.
