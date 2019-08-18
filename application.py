@@ -21,6 +21,10 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
+def getUserID(username):
+	user = db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).fetchone()
+	return user.id
+
 @app.before_request
 def before_request():
     g.username = None
@@ -62,6 +66,7 @@ def login():
             password = request.form['password']
             if user_check_1(username, password):
                 session['username'] = request.form['username']
+                session['id'] = getUserID(session['username'])
                 return redirect(url_for('search'))
             else:
                 error = "Invalid credentials."
@@ -117,8 +122,14 @@ def search():
             return render_template("results.html", title="Search Results", books=books)
         return render_template("search.html", title="Search")
 
-def noReviews(book_id):
-    return db.execute("SELECT * FROM reviews WHERE book_id = :book_id", {"book_id": book_id}).rowcount==0
+def addReview(revTuple):
+    db.execute("INSERT INTO reviews (user_id, book_id, rating, opinion) VALUES (:user_id, :book_id, :rating, :opinion)",
+        {"user_id": revTuple[0], "book_id": revTuple[1], "rating": revTuple[2], "opinion": revTuple[3]})
+    db.commit()
+
+def getUserID(username):
+	user = db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).fetchone()
+	return user.id
 
 def getUsername(user_id):
 	user = db.execute("SELECT * FROM users WHERE id = :id", {"id": user_id}).fetchone()
@@ -134,25 +145,28 @@ def getReviews(book_id):
             review_list.append({"user": user, "rating": rating, "opinion": opinion})
 	return review_list
 
+def noReviews(book_id):
+    return db.execute("SELECT * FROM reviews WHERE book_id = :book_id", {"book_id": book_id}).rowcount==0
+
 @app.route("/book", methods=['GET','POST'])
 def book():
-    book=None
     error=None
     reviews=None
     if g.username:
         if request.method == 'GET':
             # get book id
-            book_id = request.args.get('book_id')
-            book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
+            session["book_id"] = request.args.get('book_id')
+            session["book"] = db.execute("SELECT * FROM books WHERE id = :id", {"id": session["book_id"]}).fetchone()
             # if there are no reviews for this book
-            if noReviews(book_id):
+            if noReviews(session["book_id"]):
                 error = "No Reviews"   
             # if there are reviews for this book
             else:
-                reviews = getReviews(book_id)
-        # else:           
-    return render_template("book.html", title="Book Reviews", book=book, reviews=reviews, error=error)
+                reviews = getReviews(session["book_id"])
+        elif request.method == 'POST': 
+            rating = request.form['rating']
+            comment = request.form['comment']
+            addReview((session["id"], session["book_id"], rating, comment))            
+    return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error)
 
-@app.route("/response", methods=['GET'])
-def response():
-    return render_template("tester.html")
+
