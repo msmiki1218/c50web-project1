@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="card bg-nav-color text-light p-5 m-5">
+  <h1 class="card-title text-center">404</h1>
+  <p class="card-text lead text-center">OOPS! The ISBN you are looking for cannot be found.</p>
+  <p class="card-text text-center">Return to <a href="{{ url_for('search', title='Search') }}"
+      class="text-danger bg-light px-2">search</a> page.</p>
+</div>
+{% endblock %}

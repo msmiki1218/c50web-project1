@@ -112,6 +112,8 @@ def search():
             author = request.form['author']
             if isbn:
                 books = db.execute("SELECT * FROM books WHERE isbn iLIKE '%"+isbn+"%' ").fetchall()
+                if len(books) == 0:
+                    return redirect(url_for('error404'))
             elif title:
                 books = db.execute("SELECT * FROM books WHERE title iLIKE '%"+title+"%' ").fetchall()
             elif author:              
@@ -121,6 +123,10 @@ def search():
                 return redirect(url_for('search', error=error))              
             return render_template("results.html", title="Search Results", books=books)
         return render_template("search.html", title="Search")
+
+@app.route("/404")
+def error404():
+    return render_template("404.html", title = "404 Error")
 
 def addReview(revTuple):
     db.execute("INSERT INTO reviews (user_id, book_id, rating, opinion) VALUES (:user_id, :book_id, :rating, :opinion)",
@@ -166,7 +172,8 @@ def book():
         elif request.method == 'POST': 
             rating = request.form['rating']
             comment = request.form['comment']
-            addReview((session["id"], session["book_id"], rating, comment))            
+            addReview((session["id"], session["book_id"], rating, comment))
+            return redirect(url_for('search'), title="Search")           
     return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error)
 
 
