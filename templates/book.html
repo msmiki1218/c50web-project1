@@ -16,6 +16,13 @@
 {% endif %}
 
 <div class="card p-3 mb-3">
+  <h5 class="card-title">Goodreads Reviews
+    <hr>
+  </h5>
+  <div class="card-text">
+    <p>Average rating: {{ average }}</p>
+    <p>Number of ratings: {{ count }}</p><br>
+  </div>
   <h5 class="card-title">
     Book Reviews
     <hr>
@@ -29,9 +36,10 @@
     <ul>
       {% for review in reviews %}
       <li>User: <strong>{{ review.user }}</strong><br>Rating: {{ review.rating }}<br>Comment: {{ review.opinion }}<br>
-      </li>
+      </li><br>
       {% endfor %}
     </ul>
+    <p>{{ isbn }}</p>
     {% endif %}
   </div>
 </div>

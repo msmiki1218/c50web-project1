@@ -1,6 +1,7 @@
 import os
+import requests
 
-from flask import Flask, session, render_template, request, url_for, redirect, g
+from flask import Flask, session, render_template, request, url_for, redirect, g, json
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -159,7 +160,9 @@ def book():
     error=None
     reviews=None
     if g.username:
-        if request.method == 'GET':
+        if request.method == 'GET': 
+            average = None
+            count = None
             # get book id
             session["book_id"] = request.args.get('book_id')
             session["book"] = db.execute("SELECT * FROM books WHERE id = :id", {"id": session["book_id"]}).fetchone()
@@ -169,11 +172,19 @@ def book():
             # if there are reviews for this book
             else:
                 reviews = getReviews(session["book_id"])
+                isbn = session["book"].isbn
+                key = 'aDslZlEv6KMohQRN1wyig'
+                res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"isbns": isbn, "key": key})
+                if res.status_code != 200:
+                    raise Exception("ERROR: API request unsuccessful")
+                data = res.json()
+                average = data["books"][0]["average_rating"]
+                count = data["books"][0]["ratings_count"]
         elif request.method == 'POST': 
             rating = request.form['rating']
             comment = request.form['comment']
             addReview((session["id"], session["book_id"], rating, comment))
             return redirect(url_for('search'), title="Search")           
-    return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error)
+    return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error, average=average, count=count)
 
 
