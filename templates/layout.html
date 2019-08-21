@@ -54,9 +54,9 @@
   </nav>
   <div class="container">
     {% if title %}
-    <h3>Rice Books - {{ title }}</h3>
+    <h1>Rice Books - {{ title }}</h1>
     {% else %}
-    <h3>Rice Books</h3>
+    <h1>Rice Books</h1>
     {% endif %} {% with messages = get_flashed_messages(with_categories=true)
       %} {% if messages %} {% for category, message in messages %}
     <div class="alert alert-{{ category }}">

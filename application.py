@@ -108,7 +108,7 @@ def login():
                 session['id'] = getUserID(session['username'])
                 return redirect(url_for('search'))
             else:
-                error = "Invalid credentials."
+                error = "We can't find you... please try again or register."
     else:
         error = "You are already logged in."
     return render_template("login.html", title = "Login", error=error, alert='danger')

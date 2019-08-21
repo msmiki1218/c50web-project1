@@ -1,10 +1,13 @@
 body {
   background-color: #fdfbf2;
+  background-image: url("img/librarybooks.jpg");
+  background-size: cover;
   font-family: 'Montserrat', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Nunito', sans-serif;
+  color: #ab383a;
 }
 
 .bg-nav-color {
