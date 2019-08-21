@@ -49,6 +49,9 @@
   <h5 class="card-title">Add a Review
     <hr>
   </h5>
+  {% if already_reviewed %}
+  <alert class="alert-warning">You can only review a book once.</alert>
+  {% else %}
   <div class="card-text">
     Rate this book:
     <form method="post" id="reviewForm">
@@ -81,5 +84,6 @@
       <button type="submit">Add Review</button>
     </form>
   </div>
+  {% endif %}
 </div>
 {% endblock %}

@@ -41,9 +41,9 @@ def checkUsername(username):
         return False
     else:
         return True
-        
-def checkRating(book_id,user_id):
-    return db.execute("SELECT user_id WHERE book_id = :book_id", {"user_id": user_id, "book_id": book_id}).rowcount == 0:
+
+def checkReviews(book_id,user_id):
+    return db.execute("SELECT user_id FROM reviews WHERE book_id = :book_id", {"user_id": user_id, "book_id": book_id}).rowcount == 0
 
 def getReviews(book_id):
 	review_list = []
@@ -159,10 +159,9 @@ def error404():
 def book():
     error=None
     reviews=None
+    already_reviewed = False
     if g.username:
         if request.method == 'GET': 
-            average = None
-            count = None
             # get book id
             session["book_id"] = request.args.get('book_id')
             session["book"] = db.execute("SELECT * FROM books WHERE id = :id", {"id": session["book_id"]}).fetchone()
@@ -178,13 +177,16 @@ def book():
                 if res.status_code != 200:
                     raise Exception("ERROR: API request unsuccessful")
                 data = res.json()
-                average = data["books"][0]["average_rating"]
-                count = data["books"][0]["ratings_count"]
+                session["average"] = data["books"][0]["average_rating"]
+                session["count"] = data["books"][0]["ratings_count"]
         elif request.method == 'POST': 
             rating = request.form['rating']
             comment = request.form['comment']
-            addReview((session["id"], session["book_id"], rating, comment))
-            return redirect(url_for('search'), title="Search")           
-    return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error, average=average, count=count)
+            if checkReviews(session["book_id"], session["id"]):
+                addReview((session["id"], session["book_id"], rating, comment))
+                return redirect(url_for('search'), title="Search") 
+            else:
+                already_reviewed = True          
+    return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error, average=session["average"], count=session["count"], already_reviewed=already_reviewed)
 
 
