@@ -191,7 +191,7 @@ def book():
                 if res.status_code != 200:
                     raise Exception("ERROR: API request unsuccessful")
                 data = res.json()
-                session["average"] = data["books"][0]["average_rating"]
+                session["avg_rating"] = data["books"][0]["average_rating"]
                 session["count"] = data["books"][0]["ratings_count"]
         elif request.method == 'POST': 
             rating = request.form['rating']
@@ -201,7 +201,8 @@ def book():
                 return redirect(url_for('search'), title="Search") 
             else:
                 already_reviewed = True          
-    return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error, average=session["average"], count=session["count"], already_reviewed=already_reviewed)
+    return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error,
+                            avg_rating=session["avg_rating"], count=session["count"], already_reviewed=already_reviewed)
 
 @app.route("/api/<isbn>", methods=['GET'])
 def api(isbn):
