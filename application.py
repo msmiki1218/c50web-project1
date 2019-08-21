@@ -22,9 +22,51 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
+# functions
+def addReview(revTuple):
+    db.execute("INSERT INTO reviews (user_id, book_id, rating, opinion) VALUES (:user_id, :book_id, :rating, :opinion)",
+        {"user_id": revTuple[0], "book_id": revTuple[1], "rating": revTuple[2], "opinion": revTuple[3]})
+    db.commit()
+
+# check if username in database
+def checkLoginInfo(username, password):
+    if db.execute("SELECT * FROM users WHERE username = :username AND password = :password", {"username": username, "password": password}).rowcount == 0:
+        return False
+    else:
+        return True
+
+# check if username in database
+def checkUsername(username):
+    if db.execute("SELECT * FROM users WHERE username = :username ", {"username": username}).rowcount == 0:
+        return False
+    else:
+        return True
+        
+def checkRating(book_id,user_id):
+    return db.execute("SELECT user_id WHERE book_id = :book_id", {"user_id": user_id, "book_id": book_id}).rowcount == 0:
+
+def getReviews(book_id):
+	review_list = []
+	book_reviews = db.execute("SELECT * FROM reviews WHERE book_id = :book_id", {"book_id": book_id})
+	for book_review in book_reviews:
+            user = getUsername(book_review.user_id)
+            rating = book_review.rating
+            opinion = book_review.opinion
+            review_list.append({"user": user, "rating": rating, "opinion": opinion})
+	return review_list
+    
 def getUserID(username):
 	user = db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).fetchone()
 	return user.id
+
+def getUsername(user_id):
+	user = db.execute("SELECT * FROM users WHERE id = :id", {"id": user_id}).fetchone()
+	return user.username
+
+def noReviews(book_id):
+    return db.execute("SELECT * FROM reviews WHERE book_id = :book_id", {"book_id": book_id}).rowcount==0
+
+# routes
 
 @app.before_request
 def before_request():
@@ -43,21 +85,6 @@ def index():
         username = None
     return render_template("index.html", title="Home", username=username)
 
-# check if username in database
-def user_check_1(username, password):
-    if db.execute("SELECT * FROM users WHERE username = :username AND password = :password", {"username": username, "password": password}).rowcount == 0:
-        return False
-    else:
-        return True
-
-# check if username in database
-def user_check_2(username):
-    if db.execute("SELECT * FROM users WHERE username = :username ", {"username": username}).rowcount == 0:
-        return False
-    else:
-        return True
-
-
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     error = None
@@ -65,7 +92,7 @@ def login():
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
-            if user_check_1(username, password):
+            if checkLoginInfo(username, password):
                 session['username'] = request.form['username']
                 session['id'] = getUserID(session['username'])
                 return redirect(url_for('search'))
@@ -80,7 +107,6 @@ def logout():
         session.pop('username', None)
     return redirect(url_for('index'))
 
-
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     error = None
@@ -89,7 +115,7 @@ def register():
             username = request.form['username']
             password = request.form['password']
             confirm_password = request.form['confirm_password']
-            if user_check_2(username):
+            if checkUsername(username):
                 error = "Please choose a different username."
             else:
                 # check password fields
@@ -128,32 +154,6 @@ def search():
 @app.route("/404")
 def error404():
     return render_template("404.html", title = "404 Error")
-
-def addReview(revTuple):
-    db.execute("INSERT INTO reviews (user_id, book_id, rating, opinion) VALUES (:user_id, :book_id, :rating, :opinion)",
-        {"user_id": revTuple[0], "book_id": revTuple[1], "rating": revTuple[2], "opinion": revTuple[3]})
-    db.commit()
-
-def getUserID(username):
-	user = db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).fetchone()
-	return user.id
-
-def getUsername(user_id):
-	user = db.execute("SELECT * FROM users WHERE id = :id", {"id": user_id}).fetchone()
-	return user.username
-
-def getReviews(book_id):
-	review_list = []
-	book_reviews = db.execute("SELECT * FROM reviews WHERE book_id = :book_id", {"book_id": book_id})
-	for book_review in book_reviews:
-            user = getUsername(book_review.user_id)
-            rating = book_review.rating
-            opinion = book_review.opinion
-            review_list.append({"user": user, "rating": rating, "opinion": opinion})
-	return review_list
-
-def noReviews(book_id):
-    return db.execute("SELECT * FROM reviews WHERE book_id = :book_id", {"book_id": book_id}).rowcount==0
 
 @app.route("/book", methods=['GET','POST'])
 def book():
