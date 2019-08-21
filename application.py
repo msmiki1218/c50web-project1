@@ -1,7 +1,7 @@
 import os
 import requests
 
-from flask import Flask, session, render_template, request, url_for, redirect, g, json
+from flask import Flask, session, render_template, request, url_for, redirect, g, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -44,6 +44,10 @@ def checkUsername(username):
 
 def checkReviews(book_id,user_id):
     return db.execute("SELECT user_id FROM reviews WHERE book_id = :book_id", {"user_id": user_id, "book_id": book_id}).rowcount == 0
+
+def getBookbyISBN(isbn):
+    book = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
+    return book
 
 def getReviews(book_id):
 	review_list = []
@@ -188,5 +192,25 @@ def book():
             else:
                 already_reviewed = True          
     return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error, average=session["average"], count=session["count"], already_reviewed=already_reviewed)
+
+@app.route("/api/<isbn>", methods=['GET'])
+def api(isbn):
+    book = getBookbyISBN(isbn)
+    key = 'aDslZlEv6KMohQRN1wyig'
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"isbns": isbn, "key": key})
+    if res.status_code != 200:
+        raise Exception("ERROR: API request unsuccessful")
+    data = res.json()
+    average = data["books"][0]["average_rating"]
+    count = data["books"][0]["ratings_count"]
+    return jsonify({
+        "title": book.title,
+        "author": book.author,
+        "year": book.year,
+        "isbn": isbn,
+        "review_count": count,
+        "average_score": average,
+        })
+
 
 
