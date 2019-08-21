@@ -1,9 +1,8 @@
-{% extends "layout.html" %} {% block body %} {% if username %}
-<div class="alert alert-info" role="alert">Logged in as {{ username }}.</div>
-<p>Please <a href="{{ url_for('logout') }}">logout</a> or use a menu link.</p>
-{% else %}
-<div class="alert alert-warning" role="alert">
-  You are not logged in.
+{% extends "layout.html" %} {% block body %}
+<div class="card p-3 m-3">
+  <h3 class="card-title">Welcome to Rice Books
+    <hr>
+  </h3>
+  <p class="card-text lead">Please <a href="{{ url_for('login')}}">log in</a> to use this site.</p>
 </div>
-<p>Please <a href="{{ url_for('login') }}">login</a> to use this website.</p>
-{% endif %} {% endblock %}
+{% endblock %}

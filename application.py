@@ -24,32 +24,36 @@ db = scoped_session(sessionmaker(bind=engine))
 
 # functions
 def addReview(revTuple):
+    # adds user review to reviews table
     db.execute("INSERT INTO reviews (user_id, book_id, rating, opinion) VALUES (:user_id, :book_id, :rating, :opinion)",
         {"user_id": revTuple[0], "book_id": revTuple[1], "rating": revTuple[2], "opinion": revTuple[3]})
     db.commit()
 
-# check if username in database
 def checkLoginInfo(username, password):
+    # check if username, password is in database for login
     if db.execute("SELECT * FROM users WHERE username = :username AND password = :password", {"username": username, "password": password}).rowcount == 0:
         return False
     else:
         return True
 
-# check if username in database
 def checkUsername(username):
+    # check if username in database for registration
     if db.execute("SELECT * FROM users WHERE username = :username ", {"username": username}).rowcount == 0:
         return False
     else:
         return True
 
 def checkReviews(book_id,user_id):
+    # check if user had written a review for a given book
     return db.execute("SELECT user_id FROM reviews WHERE book_id = :book_id", {"user_id": user_id, "book_id": book_id}).rowcount == 0
 
 def getBookbyISBN(isbn):
+    # gets book information using isbn number
     book = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
     return book
 
 def getReviews(book_id):
+    # gets list of reviews for a given book
 	review_list = []
 	book_reviews = db.execute("SELECT * FROM reviews WHERE book_id = :book_id", {"book_id": book_id})
 	for book_review in book_reviews:
@@ -60,14 +64,17 @@ def getReviews(book_id):
 	return review_list
     
 def getUserID(username):
+    # get user id for a given userame
 	user = db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).fetchone()
 	return user.id
 
 def getUsername(user_id):
+    # get username given user id
 	user = db.execute("SELECT * FROM users WHERE id = :id", {"id": user_id}).fetchone()
 	return user.username
 
 def noReviews(book_id):
+    #checks if a given book idea has any reviews
     return db.execute("SELECT * FROM reviews WHERE book_id = :book_id", {"book_id": book_id}).rowcount==0
 
 # routes
@@ -87,7 +94,7 @@ def index():
         username = session['username']
     else:
         username = None
-    return render_template("index.html", title="Home", username=username)
+    return render_template("index.html", title = "Home")
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -102,6 +109,8 @@ def login():
                 return redirect(url_for('search'))
             else:
                 error = "Invalid credentials."
+    else:
+        error = "You are already logged in."
     return render_template("login.html", title = "Login", error=error, alert='danger')
 
 @app.route("/logout")
@@ -109,7 +118,7 @@ def logout():
     # remove the username from the session if it is there
     if g.username:
         session.pop('username', None)
-    return redirect(url_for('index'))
+    return render_template("logout.html", title = "Logout")
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -138,6 +147,7 @@ def search():
         books = None
         error = None
         if request.method == 'POST':
+            #search for book using provided information
             isbn = request.form['isbn']
             title = request.form['title']
             author = request.form['author']
