@@ -161,8 +161,7 @@ def search():
                 books = db.execute("SELECT * FROM books WHERE author iLIKE '%"+author+"%' ").fetchall()
             else:
                 message = 'You must provide isbn, title, or author.'
-                alert_style = 'danger'
-                return redirect(url_for('search', message=message, alert_style=alert_style))              
+                return redirect(url_for('search', message=message))
             return render_template("results.html", title="Search Results", books=books)
         return render_template("search.html", title="Search")
 
@@ -195,17 +194,17 @@ def book():
                 data = res.json()
                 goodread_info = {"average": data["books"][0]["average_rating"], "count": data["books"][0]["ratings_count"]}
             return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error, goodread_info=goodread_info, already_reviewed=already_reviewed)
+
         elif request.method == 'POST': 
             rating = request.form['rating']
             comment = request.form['comment']
             if checkReviews(session["book_id"], session["id"]):
                 addReview((session["id"], session["book_id"], rating, comment))
                 message = 'Thanks for your review'
-                alert_style = 'success'
-                return redirect(url_for('search', message=message, alert_style=alert_style)) 
+                return redirect(url_for('search', title="Search", message=message)) 
             else:
                 already_reviewed = True          
-    return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error, goodread_info=goodread_info, already_reviewed=already_reviewed)
+        return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error, goodread_info=goodread_info, already_reviewed=already_reviewed)
 
 @app.route("/api/<isbn>", methods=['GET'])
 def api(isbn):
