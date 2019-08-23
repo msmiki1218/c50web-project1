@@ -22,6 +22,7 @@
 
 `books_import` folder contains 'books.csv' and `import.py` imported the csv information to the database.
 Site was styled with bootstrap 4 and sass.
+I did not add any Flask extensions.
 
 ### Lessons Learned
 
