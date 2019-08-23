@@ -145,7 +145,7 @@ def search():
     # run only if logged in
     if g.username:
         books = None
-        error = None
+        message = None
         if request.method == 'POST':
             #search for book using provided information
             isbn = request.form['isbn']
@@ -160,8 +160,9 @@ def search():
             elif author:              
                 books = db.execute("SELECT * FROM books WHERE author iLIKE '%"+author+"%' ").fetchall()
             else:
-                error = 'You must provide isbn, title, or author.' 
-                return redirect(url_for('search', error=error))              
+                message = 'You must provide isbn, title, or author.'
+                alert_style = 'danger'
+                return redirect(url_for('search', message=message, alert_style=alert_style))              
             return render_template("results.html", title="Search Results", books=books)
         return render_template("search.html", title="Search")
 
@@ -173,6 +174,7 @@ def error404():
 def book():
     error=None
     reviews=None
+    goodread_info = None
     already_reviewed = False
     if g.username:
         if request.method == 'GET': 
@@ -191,18 +193,19 @@ def book():
                 if res.status_code != 200:
                     raise Exception("ERROR: API request unsuccessful")
                 data = res.json()
-                session["avg_rating"] = data["books"][0]["average_rating"]
-                session["count"] = data["books"][0]["ratings_count"]
+                goodread_info = {"average": data["books"][0]["average_rating"], "count": data["books"][0]["ratings_count"]}
+            return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error, goodread_info=goodread_info, already_reviewed=already_reviewed)
         elif request.method == 'POST': 
             rating = request.form['rating']
             comment = request.form['comment']
             if checkReviews(session["book_id"], session["id"]):
                 addReview((session["id"], session["book_id"], rating, comment))
-                return redirect(url_for('search'), title="Search") 
+                message = 'Thanks for your review'
+                alert_style = 'success'
+                return redirect(url_for('search', message=message, alert_style=alert_style)) 
             else:
                 already_reviewed = True          
-    return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error,
-                            avg_rating=session["avg_rating"], count=session["count"], already_reviewed=already_reviewed)
+    return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error, goodread_info=goodread_info, already_reviewed=already_reviewed)
 
 @app.route("/api/<isbn>", methods=['GET'])
 def api(isbn):

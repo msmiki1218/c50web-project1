@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
-{% if error %}
-<div class="alert alert-danger my-3" role="alert">
-  {{ error }}
+{% if message %}
+<div class="alert alert-{{ alert_style }} my-3" role="alert">
+  {{ message }}
 </div>
 {% endif %}
 <div class="card m-3 p-3">

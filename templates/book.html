@@ -15,14 +15,17 @@
 <!-- end card -->
 {% endif %}
 
+{% if goodread_info or reviews %}
 <div class="card p-3 m-3">
+  {% if goodread_info %}
   <h5 class="card-title">Goodreads Reviews
     <hr>
   </h5>
   <div class="card-text">
-    <p>Average rating: {{ avg_rating }}</p>
-    <p>Number of ratings: {{ count }}</p><br>
+    <p>Average rating: {{ goodread_info.average}}</p>
+    <p>Number of ratings: {{ goodread_info.count }}</p><br>
   </div>
+  {% endif %}
   <h5 class="card-title">
     Book Reviews
     <hr>
@@ -43,6 +46,7 @@
     {% endif %}
   </div>
 </div>
+{% endif %}
 <!-- end card two -->
 
 <div class="card p-3 m-3">
