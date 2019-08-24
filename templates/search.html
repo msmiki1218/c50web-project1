@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 {% if message %}
-<div class="alert alert-danger my-3" role="alert">
+<div class="alert alert-{{ alert_style }} my-3" role="alert">
   {{ message }}
 </div>
 {% endif %}
