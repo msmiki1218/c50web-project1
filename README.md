@@ -1,6 +1,6 @@
 # Project 1
 
-## Web Programming with Python and JavaScript
+**Web Programming with Python and JavaScript**
 
 ### `application.py`
 
@@ -32,7 +32,7 @@ I did not add any Flask extensions.
 - take "baby steps".  Even though I thought I was breaking down my code in smaller pieces, I needed to break things down even smaller.
 - GIT BASH worked so much better for me than PowerShell or Command Prompt.
 - it is okay to walk away when needed to regroup and create a new strategy
-- this project took me way to long to finish...
+- this project took me way too long to finish...
 
 ### Recommendations
 
