@@ -14,7 +14,7 @@
 - `/register`:  Register page with registration form is displayed.  For users that are not in the database. Routes to `login` page.
 - `/search`:  Search page where user can search for a book by ISBN, title, and/or author.  If a bad ISBN is entered, a 404 error is thrown.  An error message is displayed if there is no user input.  Partial entries are allowed.  Routed to the `results` page.
 - `/404`:  Displayed when user enters a bad ISBN in `search` form.
-- `/results`: Displays the results of the search as a list. Users can get more information about a book by clicking its title, which routes to the `book` page.
+- `/results`: Displays the result of the search as a list. Users can get more information about a book by clicking its title, which routes to the `book` page.
 - `/book`: Displays title, author, publication date, and ISBN for the selected book.  Displays the average rating and number of ratings from Goodreads API.  Displays any user reviews from the database.  Displays form for user to submit a review of the book.  If user has alreeady reviewed this title, an error message is displayed. If user has reviewed this title, the review is added to the database and user is routed to the `search` page with a message thanking them for their review.
 - `/api/<isbn>`:  Displays JSON object for the book with the user provided ISBN.  Provides title, author, publication date, ISBN, number of reviews in Goodreads, and average rating from Goodreads.
 
