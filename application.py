@@ -199,10 +199,8 @@ def book():
             rating = request.form['rating']
             comment = request.form['comment']
             if checkReviews(session["book_id"], session["id"]):
-                addReview((session["id"], session["book_id"], rating, comment))
-                message = 'Thanks for your review'
-                alert_style = 'success'
-                return redirect(url_for('search', message=message, alert_style=alert_style)) 
+                addReview((session["id"], session["book_id"], rating, comment))            
+                return redirect(url_for('search')) 
             else:
                 already_reviewed = True          
     return render_template("book.html", title="Book Reviews", book=session["book"], reviews=reviews, error=error, goodread_info=goodread_info, already_reviewed=already_reviewed)
